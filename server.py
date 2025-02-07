@@ -6,6 +6,7 @@ from flask_compress import Compress
 from flask_cors import CORS
 from routes import register_routes
 from werkzeug.exceptions import HTTPException
+from flasgger import Swagger
 import configparser
 
 compress = Compress()
@@ -52,6 +53,55 @@ def home():
 
 # Register blueprints (modular routes)
 register_routes(app)
+
+swagger_config = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": "apispec",
+            "route": "/apispec.json",
+            "rule_filter": lambda rule: True,  # All rules included
+            "model_filter": lambda tag: True,  # All models included
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/apidocs/",
+}
+
+swagger_template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "Flask Server API",
+        "description": "API for flask server",
+        "version": "1.0.0",
+        "contact": {
+            "responsibleOrganization": "EmanciTech",
+            "responsibleDeveloper": "Arjun Khetia",
+            "email": "arjunkhetia@gmail.com",
+            "url": "https://arjunkhetia.me",
+        },
+    },
+    "host": "localhost:5000",
+    "schemes": ["http", "https"],
+    "basePath": "/",
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+        }
+    },
+    "security": [
+        {
+            "Bearer": []
+        }
+    ]
+}
+
+# Initialize Swagger for API documentation
+swagger = Swagger(app, config=swagger_config, template=swagger_template)
 
 # Generic Exception Handlers
 @app.errorhandler(HTTPException)

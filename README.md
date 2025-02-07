@@ -1,4 +1,4 @@
-# Python (Flask) Server - Project   ![Version][version-image]
+# Python (Flask) Server + Swagger - Project   ![Version][version-image]
 
 ![Linux Build][linuxbuild-image]
 ![Windows Build][windowsbuild-image]
@@ -7,10 +7,10 @@
 ![Dependency Status][dependency-image]
 ![devDependencies Status][devdependency-image]
 
-The quickest way to get start with Python (Flask) - Server, just clone the project:
+The quickest way to get start with Python (Flask) - Server + Swagger API Documentation, just clone the project:
 
 ```bash
-$ git clone https://github.com/arjunkhetia/Python-Flask-Project.git
+$ git clone https://github.com/arjunkhetia/Flask-Swagger-Project.git
 ```
 
 Install dependencies:
@@ -133,6 +133,67 @@ COLORS={'main':'[0,97,255]', 'static':'[255,153,0]'}
 ```
 
 ![Monitoring Dashboard](https://github.com/arjunkhetia/Python-Flask-Project/blob/main/static/flask-monitoring-dashboard.png "Monitoring Dashboard")
+
+# Flasgger
+
+Easy Swagger UI for our Flask API, Flasgger is a Flask extension to extract OpenAPI-Specification from all Flask views registered in our API.
+
+```python
+from flasgger import Swagger
+
+swagger_config = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": "apispec",
+            "route": "/apispec.json",
+            "rule_filter": lambda rule: True,  # All rules included
+            "model_filter": lambda tag: True,  # All models included
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/apidocs/",
+}
+
+swagger_template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "Flask Server API",
+        "description": "API for flask server",
+        "version": "1.0.0",
+        "contact": {
+            "responsibleOrganization": "EmanciTech",
+            "responsibleDeveloper": "Arjun Khetia",
+            "email": "arjunkhetia@gmail.com",
+            "url": "https://arjunkhetia.me",
+        },
+    },
+    "host": "localhost:5000",
+    "schemes": ["http", "https"],
+    "basePath": "/",
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+        }
+    },
+    "security": [
+        {
+            "Bearer": []
+        }
+    ]
+}
+
+# Initialize Swagger for API documentation
+swagger = Swagger(app, config=swagger_config, template=swagger_template)
+```
+
+Swagger UI at `http://localhost:5000/apidocs`
+
+![Swagger UI](https://github.com/arjunkhetia/Flask-Swagger-Project/blob/main/static/swagger-ui.png "Swagger UI")
 
 [version-image]: https://img.shields.io/badge/Version-1.0.0-orange.svg
 [linuxbuild-image]: https://img.shields.io/badge/Linux-passing-brightgreen.svg
